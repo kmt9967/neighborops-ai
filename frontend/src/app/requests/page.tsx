@@ -1,0 +1,5 @@
+"use client";
+import {useEffect,useState} from "react";
+import {Heading,RequestTable} from "@/components/UI";
+import {Request,get} from "@/lib/api";
+export default function Requests(){const [items,setItems]=useState<Request[]>([]),[filter,setFilter]=useState("ALL"),[error,setError]=useState("");useEffect(()=>{get<Request[]>("/api/requests").then(setItems).catch(e=>setError(e.message))},[]);return <><Heading eyebrow="Request queue" title="Assistance requests" subtitle="Track every request from intake through coordination and human decisions."/>{error&&<div className="notice error">{error}</div>}<div className="filter"><select value={filter} onChange={e=>setFilter(e.target.value)} aria-label="Filter requests by status"><option>ALL</option>{["NEW","PROCESSING","AUTO_APPROVED","NEEDS_INFORMATION","HUMAN_REVIEW","ALLOCATED","SCHEDULED","REJECTED"].map(s=><option key={s} value={s}>{s.replaceAll("_"," ")}</option>)}</select><span className="subtitle">{items.filter(r=>filter==="ALL"||r.status===filter).length} requests</span></div><div className="card"><RequestTable items={items.filter(r=>filter==="ALL"||r.status===filter)}/></div></>}
