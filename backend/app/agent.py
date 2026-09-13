@@ -130,7 +130,10 @@ def process_request(ops, request_id):
         try:
             model = OpenAIModel(client_args={"api_key": key, "base_url": "https://openrouter.ai/api/v1", "timeout": 45.0},
                 model_id=model_id, params={"max_tokens": 1800, "temperature": 0})
-            agent = Agent(model=model, tools=build_tools(ops, request_id), system_prompt=SYSTEM_PROMPT)
+            # Strands' default callback prints model text. Keep beneficiary content and
+            # provider output out of process logs (and avoid Windows console encoding errors).
+            agent = Agent(model=model, tools=build_tools(ops, request_id),
+                system_prompt=SYSTEM_PROMPT, callback_handler=None)
             agent(f"Process request {request_id}. Inspect it and current stock first. Call tools for every actual action. Stop after this request.")
             return model_id
         except Exception as exc:
