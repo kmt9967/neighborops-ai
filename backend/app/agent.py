@@ -3,7 +3,7 @@ import os
 from strands import Agent, tool
 from strands.models.openai import OpenAIModel
 from . import db
-from .store import Operations
+from .store import Operations, event
 
 SYSTEM_PROMPT = """You are NeighborOps, an operations coordination agent for Karachi Community Pantry.
 Automate routine, reversible coordination. Escalate human judgment. Use tools to inspect each request and current state.
@@ -128,15 +128,20 @@ def process_request(ops, request_id):
         if model_id != "openrouter/free" and not model_id.endswith(":free"):
             raise ValueError("Only free OpenRouter models are allowed")
         try:
-            model = OpenAIModel(client_args={"api_key": key, "base_url": "https://openrouter.ai/api/v1", "timeout": 45.0},
+            model = OpenAIModel(client_args={"api_key": key, "base_url": "https://openrouter.ai/api/v1", "timeout": 75.0},
                 model_id=model_id, params={"max_tokens": 1800, "temperature": 0})
             # Strands' default callback prints model text. Keep beneficiary content and
             # provider output out of process logs (and avoid Windows console encoding errors).
             agent = Agent(model=model, tools=build_tools(ops, request_id),
                 system_prompt=SYSTEM_PROMPT, callback_handler=None)
             agent(f"Process request {request_id}. Inspect it and current stock first. Call tools for every actual action. Stop after this request.")
+            with ops.engine.begin() as c:
+                event(c, "MODEL_COMPLETED", "Strands model completed", request_id, ops.run_id, {"model": model_id})
             return model_id
         except Exception as exc:
             # Never log exception text: some providers embed request headers in errors.
+            with ops.engine.begin() as c:
+                event(c, "MODEL_ATTEMPT_FAILED", "Free model attempt failed; trying a safe fallback", request_id, ops.run_id,
+                    {"model": model_id, "error_type": type(exc).__name__})
             last_error = exc
     raise RuntimeError("Agent temporarily unavailable — operational data is safe. Retry agent run.") from last_error

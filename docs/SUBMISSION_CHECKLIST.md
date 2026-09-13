@@ -5,9 +5,16 @@
 - [x] Five fictional requests and protected inventory
 - [x] Human decision endpoint and activity timeline
 - [x] Backend policy tests and frontend build checks
-- [ ] Configure an OpenRouter key and record the live agent run
-- [ ] Create Supabase project and set backend `DATABASE_URL` for hosted persistence
-- [ ] Add authentication before public access
-- [ ] Deploy backend and frontend; verify CORS and HTTPS
-- [ ] Capture screenshots and demo video
-- [ ] Publish public GitHub repository and complete Devpost submission
+- [x] Configure a backend-only OpenRouter key and verify real Strands tool invocation
+- [x] Create dedicated Supabase project, apply schema, seed five requests, and verify hosted Postgres
+- [x] Deploy backend and frontend on Vercel Hobby; verify HTTPS, browser data, and exact-origin CORS
+- [x] Publish public [GitHub repository](https://github.com/kmt9967/neighborops-ai) with MIT license
+- [x] Prepare [architecture diagram PNG](architecture.png) for required Devpost upload
+- [ ] Confirm final production agent outcomes, human reduction, and second-run idempotency
+- [ ] Rotate the OpenRouter key and update the root `.env` and backend Vercel secret
+- [ ] Record and upload a demo video (maximum five minutes), then add its public video link
+- [ ] Provide the submitter's AWS Builder ID, country of residence, and submitter type in Devpost
+- [ ] Upload the architecture PNG, check the **Good Neighbor Agents** track, and complete the remaining draft fields
+- [ ] Final-submit on Devpost only after explicit user approval
+
+The public demo uses fictional data and has no operator authentication. Authentication, authorization, rate limits, and organization isolation are required before real deployment; they are not prerequisites for recording this fictional hackathon demo.

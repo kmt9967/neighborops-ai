@@ -1,9 +1,21 @@
 # Architecture
 
-Next.js renders the operator console and calls FastAPI over HTTPS. FastAPI owns all operational state and exposes narrow endpoints for requests, stock, volunteers, the timeline, agent runs, and human decisions. SQLAlchemy targets local SQLite for a zero-account demo or Supabase Postgres via `DATABASE_URL`. The SQL migration enables RLS with no anonymous policies; browser code never receives a database credential.
+```mermaid
+flowchart LR
+  O[Community operator] --> F[Next.js dashboard<br/>Vercel Hobby]
+  F -->|HTTPS API| B[FastAPI<br/>Vercel Hobby]
+  B --> S[Strands Agents SDK]
+  S -->|tool-capable inference| M[OpenRouter free model]
+  S -->|actual tool calls| T[15 narrow operational tools]
+  T -->|TLS session pooler| D[(Supabase Postgres)]
+  T -->|protected reserve or judgment| H[Human review]
+  H -->|reduce, approve, or reject| B
+```
 
-`POST /api/agent/run` claims each NEW request atomically, creates an `agent_runs` record, and invokes a fresh Strands agent for that request. The Strands OpenAI-compatible provider calls OpenRouter's free router. The model chooses from the registered tools. Every mutating tool validates policy again at the database boundary and writes events. The unique `(request_id, resource_id)` allocation constraint and conditional inventory update prevent double reservation and negative stock.
+The [upload-ready PNG](architecture.png) shows the same architecture for Devpost. The deployed frontend is [neighborops-ai.vercel.app](https://neighborops-ai.vercel.app/), the API is [neighborops-backend.vercel.app](https://neighborops-backend.vercel.app/), and the database is a dedicated free Supabase project in Mumbai. The API allows the exact production frontend origin and local development origin through CORS.
 
-An unavailable model leaves unprocessed requests NEW and records an error. Actions already committed by a tool remain visible and idempotent. Human decisions are separate API calls and appear in the same timeline.
+FastAPI owns the operational state. Each `POST /api/agent/run?limit=1` invocation claims one `NEW` request atomically and starts a request-scoped Strands agent. The dashboard repeats the call until no new requests remain. This bounds each model run to one serverless invocation; the local API retains a five-request default. Strands chooses registered tools, and each mutating tool enforces policy in SQLAlchemy transactions. The unique allocation constraint and conditional inventory update prevent double reservation.
 
-Deployment: Next.js on Vercel, FastAPI on a Linux Python host, Supabase Postgres. Set CORS `FRONTEND_ORIGINS` to the deployed frontend origin and configure a private `DATABASE_URL` on the backend.
+The SQL migration is applied separately to Supabase; a Vercel cold start does not attempt schema creation or seeding. SQLite still creates and seeds automatically for local development. The Supabase session-pooler connection verifies TLS against the bundled public CA. No database credential is sent to the browser. Human decisions enter through a separate API call and are recorded in the same activity timeline.
+
+Current public demo limitation: mutating API endpoints have no operator authentication. The data is fictional. Add authentication, authorization, organization isolation, rate limits, and background jobs before handling real beneficiaries.

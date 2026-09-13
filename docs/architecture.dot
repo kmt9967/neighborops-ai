@@ -1,0 +1,19 @@
+digraph NeighborOps {
+  graph [rankdir=LR, bgcolor="#f8fbfa", pad="0.35", nodesep="0.42", ranksep="0.65", fontname="Arial", label="NeighborOps AI | Automate routine coordination. Escalate judgment.", labelloc=t, fontsize=20, fontcolor="#173438"];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#bdd5d0", fontname="Arial", fontsize=12, margin="0.20,0.13"];
+  edge [color="#258b79", penwidth=1.8, arrowsize=0.7, fontname="Arial", fontsize=10, fontcolor="#315b55"];
+  operator [label="Community\noperator", fillcolor="#e1f3ee"];
+  frontend [label="Next.js dashboard\nVercel Hobby", fillcolor="#e1f3ee"];
+  backend [label="FastAPI API\nVercel Hobby"];
+  strands [label="Strands Agents SDK\nrequest-scoped agent", fillcolor="#d9e9fc"];
+  model [label="OpenRouter\nfree model"];
+  tools [label="15 narrow tools\ninspect, classify, reserve,\nmatch, escalate"];
+  database [label="Supabase Postgres\nTLS session pooler", shape=cylinder, fillcolor="#fff3d9"];
+  review [label="Human review\nreduce or reject", fillcolor="#f9e5dd"];
+  operator -> frontend -> backend -> strands;
+  strands -> model [label="tool-capable inference"];
+  strands -> tools [label="actual tool calls"];
+  tools -> database [label="transactional state"];
+  tools -> review [label="protected reserve"];
+  review -> backend [label="approved decision", constraint=false];
+}

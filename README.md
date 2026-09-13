@@ -3,6 +3,8 @@
 **Autonomous Resource Coordination for Community Organizations**
 Agents for Humans · Good Neighbor Agents track
 
+**Live demo:** [neighborops-ai.vercel.app](https://neighborops-ai.vercel.app/) · **API:** [neighborops-backend.vercel.app/api/health](https://neighborops-backend.vercel.app/api/health) · **Source:** [GitHub](https://github.com/kmt9967/neighborops-ai)
+
 > Automate routine coordination. Escalate judgment.
 
 Community pantries receive more help requests than small teams can manually classify, check, schedule, and follow up. NeighborOps AI handles the repetitive operations while staff retain authority over scarce-resource and fairness decisions. This is an operations dashboard, not a chatbot. The demo organization and all people are fictional.
@@ -24,13 +26,13 @@ flowchart TD
   C --> D[Strands NeighborOps agent]
   D --> E[OpenRouter free model]
   D --> F[Narrow operational tools]
-  F --> G[(SQLite demo / Supabase Postgres)]
+  F --> G[(Supabase Postgres / local SQLite)]
   F --> H{Protected reserve or judgment?}
   H -->|Yes| I[Human review]
   I --> C
 ```
 
-**Stack:** Next.js 16, TypeScript, Tailwind CSS, lucide-react, FastAPI, SQLAlchemy, Strands Agents SDK, OpenRouter free models, and Supabase-compatible Postgres. SQLite allows a zero-account local demo. The backend uses Strands' OpenAI-compatible provider with the OpenRouter base URL; no AWS or local LLM is required.
+**Stack:** Next.js 16, TypeScript, Tailwind CSS, lucide-react, FastAPI, SQLAlchemy, Strands Agents SDK, OpenRouter free models, and Supabase Postgres. Both web projects run on Vercel Hobby. SQLite allows a zero-account local demo. The backend uses Strands' OpenAI-compatible provider with the OpenRouter base URL; no AWS or local LLM is required.
 
 ## Agent tools
 
@@ -38,7 +40,7 @@ flowchart TD
 
 ## Database
 
-`organizations`, `requests`, `resources`, `volunteers`, `allocations`, `agent_runs`, `agent_events`, `human_decisions`, `tasks`, and `notifications`. The [Supabase migration](backend/sql/001_schema.sql) enables RLS without anonymous policies. The backend's [seed script](backend/seed.py) is idempotent; API startup also seeds an empty database.
+`organizations`, `requests`, `resources`, `volunteers`, `allocations`, `agent_runs`, `agent_events`, `human_decisions`, `tasks`, and `notifications`. The [Supabase migration](backend/sql/001_schema.sql) enables RLS without anonymous policies. The backend's [seed script](backend/seed.py) is idempotent. Local SQLite startup seeds an empty database; hosted Postgres is migrated and seeded separately.
 
 ## Local setup
 
@@ -85,14 +87,14 @@ Tests cover safe reservations, protected thresholds, missing information, unavai
 
 ## Deployment
 
-1. Run the SQL migration in a Supabase project and set a private **direct Postgres** `DATABASE_URL` on the Python host. The service-role key is not required by this implementation.
-2. Deploy FastAPI with `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, set `OPENROUTER_API_KEY`, and set `FRONTEND_ORIGINS` to the Vercel origin.
-3. Deploy `frontend/` as the Vercel root directory. Set `NEXT_PUBLIC_API_URL` to the HTTPS backend URL and rebuild.
-4. Verify `/api/health`, the five requests, the run, and the human decision flow before recording the demo.
+1. Apply [`001_schema.sql`](backend/sql/001_schema.sql) to a Supabase project, then run [`seed.py`](backend/seed.py) once. The production project uses the TLS session pooler with `sslmode=verify-full` and the bundled public CA. The service-role key is not required.
+2. Import this repository into a Vercel Hobby project named `neighborops-backend` with `backend/` as root and FastAPI preset. Set backend-only `DATABASE_URL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_FALLBACK_MODEL`, and `FRONTEND_ORIGINS=https://neighborops-ai.vercel.app`. The [`vercel.json`](backend/vercel.json) allows a 300-second function run.
+3. Import the same repository into a second Vercel Hobby project named `neighborops-ai` with `frontend/` as root and Next.js preset. Its only custom environment variable is `NEXT_PUBLIC_API_URL=https://neighborops-backend.vercel.app`.
+4. Verify `/api/health`, CORS from the exact frontend origin, the five requests, the live agent run, and the human decision flow. The frontend invokes `/api/agent/run?limit=1` repeatedly so each request fits a serverless invocation.
 
 ## Limitations and future work
 
-The current MVP uses explicit Run Agent initiation, synchronous processing, one fictional organization, and drafts notifications without sending them. Free model availability and tool reliability vary. The dashboard remains useful when the model is unavailable and never displays fabricated success. Add operator authentication, organization isolation, background jobs, intake channels, policy configuration, and real notification delivery before using real beneficiary data or exposing mutating endpoints publicly.
+The current MVP uses explicit Run Agent initiation, synchronous processing, one fictional organization, and drafts notifications without sending them. Free model availability and tool reliability vary. The dashboard remains useful when the model is unavailable and never displays fabricated success. The public demo has unauthenticated mutating endpoints, so use fictional data only. Add operator authentication, organization isolation, background jobs, intake channels, policy configuration, and real notification delivery before using real beneficiary data.
 
 ## Hackathon disclosure
 
