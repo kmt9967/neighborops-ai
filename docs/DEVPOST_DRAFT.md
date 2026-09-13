@@ -49,6 +49,6 @@ The MVP uses fictional data. Before real organizations use it, we would add oper
 - **Video demo link:** required, pending recording and hosting. Maximum five minutes. Use [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
 - **AWS Builder ID:** required, must be supplied by the account owner.
 - **Submitter type and country of residence:** required, must be confirmed by the account owner.
-- **Image gallery:** optional; use dashboard, activity, and human-review screenshots after the live flow is stable. JPG/PNG/GIF, up to 15 images, 5 MB each; 3:2 works best.
+- **Image gallery:** six live production screenshots are uploaded and saved in this order: dashboard, requests, agent activity, auto-handled request, resources, volunteers. The source captures and captions are documented in [`submission-screenshots/README.md`](submission-screenshots/README.md). Capture human-review and needs-information screenshots only after genuine hosted agent runs produce those states.
 
-The saved draft already has its title, tagline, story, track, repository link, live demo link, testing instructions, and architecture PNG. The form also has an optional organization name, optional bonus blog URL, and a final submission step. Do not click the final Submit action without the owner's explicit instruction.
+The saved draft has its title, tagline, story, track, repository link, live demo link, testing instructions, architecture PNG, and six-image gallery. The video field remains empty until the owner supplies the final recording. Submitter type, country of residence, and AWS Builder ID also remain blank for the owner. The form has an optional organization name, optional bonus blog URL, and a final submission step. Do not click the final Submit action without the owner's explicit instruction.
