@@ -1,9 +1,11 @@
 """Transactional operational store. SQLite is local-only; DATABASE_URL accepts Supabase Postgres."""
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 from uuid import uuid4
 
 from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, Integer, MetaData, String, Table, Text, UniqueConstraint, create_engine
+from sqlalchemy.engine import make_url
 
 metadata = MetaData()
 
@@ -70,7 +72,12 @@ def make_engine(url=None):
     url = url or os.getenv("DATABASE_URL", "sqlite:///./neighborops.db")
     if url.startswith("postgresql://"):
         url = url.replace("postgresql://", "postgresql+psycopg://", 1)
-    return create_engine(url, connect_args={"check_same_thread": False} if url.startswith("sqlite") else {}, pool_pre_ping=True)
+    parsed = make_url(url)
+    cert = parsed.query.get("sslrootcert")
+    if cert and not Path(cert).is_absolute():
+        # Resolve bundled CA files against backend/, independent of the process cwd.
+        parsed = parsed.update_query_dict({"sslrootcert": str((Path(__file__).resolve().parents[1] / cert).resolve())})
+    return create_engine(parsed, connect_args={"check_same_thread": False} if parsed.get_backend_name() == "sqlite" else {}, pool_pre_ping=True)
 
 def init_db(engine):
     metadata.create_all(engine)

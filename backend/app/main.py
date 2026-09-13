@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy import and_, desc, func, insert, select, update
@@ -12,10 +12,11 @@ from .store import ORG, Operations, event, seed
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 engine = db.make_engine()
-db.init_db(engine)
-seed(engine)
+if engine.dialect.name == "sqlite":
+    db.init_db(engine)
+    seed(engine)
 app = FastAPI(title="NeighborOps AI API", version="0.1.0")
-app.add_middleware(CORSMiddleware, allow_origins=[x.strip() for x in os.getenv("FRONTEND_ORIGINS", "http://localhost:3000").split(",")],
+app.add_middleware(CORSMiddleware, allow_origins=list(dict.fromkeys(["http://localhost:3000", *[x.strip() for x in os.getenv("FRONTEND_ORIGINS", "").split(",") if x.strip()]])),
     allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 
 def safe(v):
@@ -71,7 +72,7 @@ def activity():
     return safe(sorted(ops().list(db.agent_events, limit=300), key=lambda e: e["created_at"], reverse=True))
 
 @app.post("/api/agent/run")
-def run_agent():
+def run_agent(limit: int = Query(default=5, ge=1, le=5)):
     run_id = db.uid()
     with engine.begin() as c:
         c.execute(insert(db.agent_runs).values(id=run_id, organization_id=ORG, status="RUNNING", started_at=db.now(), requests_processed=0))
@@ -83,7 +84,7 @@ def run_agent():
             event(c, "AGENT_UNAVAILABLE", "Agent temporarily unavailable — operational data is safe. Retry agent run.", run_id=run_id)
         raise HTTPException(503, {**summary, "message": "Agent temporarily unavailable — operational data is safe. Retry agent run."})
     model_used = None
-    for request in ops().list(db.requests, db.requests.c.status == "NEW"):
+    for request in ops().list(db.requests, db.requests.c.status == "NEW", limit=limit):
         request_id = request["id"]
         # Atomic claim prevents two concurrent runs from processing the same request.
         with engine.begin() as c:
