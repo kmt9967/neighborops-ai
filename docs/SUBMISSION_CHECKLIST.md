@@ -14,7 +14,8 @@
 - [ ] Rotate the OpenRouter key and update the root `.env` and backend Vercel secret
 - [ ] Record and upload a demo video (maximum five minutes), then add its public video link
 - [ ] Provide the submitter's AWS Builder ID, country of residence, and submitter type in Devpost
-- [ ] Upload the architecture PNG, check the **Good Neighbor Agents** track, and complete the remaining draft fields
+- [x] Upload the architecture PNG and select the **Good Neighbor Agents** track in the dedicated Devpost draft
+- [ ] Complete remaining Devpost draft fields
 - [ ] Final-submit on Devpost only after explicit user approval
 
 The public demo uses fictional data and has no operator authentication. Authentication, authorization, rate limits, and organization isolation are required before real deployment; they are not prerequisites for recording this fictional hackathon demo.

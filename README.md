@@ -69,10 +69,10 @@ Open `http://localhost:3000`. The backend automatically creates and seeds `backe
 | Variable | Purpose |
 |---|---|
 | `OPENROUTER_API_KEY` | Backend-only model credential |
-| `OPENROUTER_MODEL` | Primary free model; defaults to `nex-agi/nex-n2-pro:free` |
+| `OPENROUTER_MODEL` | Primary free model; defaults to `nex-agi/nex-n2.5-pro:free` |
 | `OPENROUTER_FALLBACK_MODEL` | Secondary free model; defaults to `openrouter/free` |
 | `DATABASE_URL` | SQLite or direct Supabase Postgres connection string |
-| `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Reserved for optional Supabase integrations; current backend uses `DATABASE_URL` |
+| `SUPABASE_URL` | Optional project identifier; current backend uses `DATABASE_URL` |
 | `NEXT_PUBLIC_API_URL` | Browser-visible backend URL |
 | `FRONTEND_ORIGINS` | Comma-separated CORS origins; defaults to local Next.js |
 
@@ -95,6 +95,10 @@ Tests cover safe reservations, protected thresholds, missing information, unavai
 ## Limitations and future work
 
 The current MVP uses explicit Run Agent initiation, synchronous processing, one fictional organization, and drafts notifications without sending them. Free model availability and tool reliability vary. The dashboard remains useful when the model is unavailable and never displays fabricated success. The public demo has unauthenticated mutating endpoints, so use fictional data only. Add operator authentication, organization isolation, background jobs, intake channels, policy configuration, and real notification delivery before using real beneficiary data.
+
+### Hosted verification snapshot (September 13, 2026)
+
+The deployed FastAPI health and dashboard endpoints returned HTTP 200; the Vercel frontend displayed the seeded Postgres data, and CORS allowed its exact origin. Real Strands/OpenRouter runs completed `REQ-001` and `REQ-002` using `openrouter/free`. Persisted tool events confirm classification, stock checks, two reservations totaling three food boxes, volunteer matching, and two tasks. Food stock moved from 18 available / 6 reserved to 15 available / 9 reserved. The other three requests remained `NEW` after the provider's free daily quota was exhausted, so the hosted human-review flow and final second-run idempotency check remain pending. Completed requests were not processed again during subsequent retries, and their two allocations stayed unique. The free quota resets at the provider's next daily window; no paid credits are required or configured.
 
 ## Hackathon disclosure
 

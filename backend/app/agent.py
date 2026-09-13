@@ -115,7 +115,7 @@ def build_tools(ops, target_id=None):
         mark_needs_information, complete_routine_processing]
 
 def model_ids():
-    primary = os.getenv("OPENROUTER_MODEL", "nex-agi/nex-n2-pro:free")
+    primary = os.getenv("OPENROUTER_MODEL", "nex-agi/nex-n2.5-pro:free")
     fallback = os.getenv("OPENROUTER_FALLBACK_MODEL", "openrouter/free")
     return list(dict.fromkeys([primary, fallback]))
 
