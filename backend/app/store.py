@@ -128,7 +128,7 @@ class Operations:
             c.execute(insert(db.allocations).values(id=db.uid(), request_id=request_id, resource_id=resource_id,
                 quantity=quantity, status="RESERVED", created_at=db.now()))
             c.execute(update(db.requests).where(db.requests.c.id == request_id).values(status="ALLOCATED", updated_at=db.now()))
-            event(c, "INVENTORY_RESERVED", f"{quantity} {resource['name']}{'s' if quantity != 1 else ''} reserved", request_id, self.run_id,
+            event(c, "INVENTORY_RESERVED", f"Reserved {quantity} units of {resource['name']}", request_id, self.run_id,
                 {"quantity": quantity, "resource_id": resource_id, "human_override": human_override})
             return {"status": "RESERVED", "quantity": quantity}
 

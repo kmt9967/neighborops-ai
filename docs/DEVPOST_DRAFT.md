@@ -20,6 +20,8 @@ NeighborOps is an operations dashboard for a fictional Karachi Community Pantry.
 
 For the large community-event request, reserving ten food boxes would cross a protected stock threshold. The agent asks for human review. The operator can reduce the allocation to four, after which reservation and volunteer coordination continue. A second agent run does not duplicate completed allocations.
 
+The hosted verification so far completed two routine food requests through real Strands/OpenRouter tool calls, reserving three food boxes and creating two delivery tasks. The remaining three hosted requests, including the human-review demonstration, are pending a fresh free-model quota window. The policy and human-decision paths pass local tests; do not describe their hosted outcomes as complete until the live run confirms them.
+
 ### How we built it
 
 The frontend is Next.js on Vercel Hobby. FastAPI, also on Vercel Hobby, invokes `strands.Agent` with 15 narrow `@tool` functions. Strands uses an OpenAI-compatible model adapter pointed at OpenRouter's free-model endpoint. The fallback free router handles temporary primary-model unavailability. SQLAlchemy stores requests, resources, allocations, volunteers, tasks, decisions, runs, and audit events in a dedicated Supabase Postgres project over verified TLS. Each serverless invocation claims one new request atomically; the frontend repeats the call until the queue is empty. The repository includes a SQL migration, idempotent seed, policy tests, and an architecture diagram.
