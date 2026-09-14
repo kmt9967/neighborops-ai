@@ -96,11 +96,13 @@ Tests cover safe reservations, protected thresholds, missing information, unavai
 
 The current MVP uses explicit Run Agent initiation, synchronous processing, one fictional organization, and drafts notifications without sending them. Free model availability and tool reliability vary. The dashboard remains useful when the model is unavailable and never displays fabricated success. The public demo has unauthenticated mutating endpoints, so use fictional data only. Add operator authentication, organization isolation, background jobs, intake channels, policy configuration, and real notification delivery before using real beneficiary data.
 
-### Hosted verification snapshot (September 13, 2026)
+### Hosted verification snapshot (September 13–14, 2026)
 
 The deployed FastAPI health and dashboard endpoints returned HTTP 200; the Vercel frontend displayed the seeded Postgres data, and CORS allowed its exact origin. Real Strands/OpenRouter runs completed `REQ-001` and `REQ-002` using `openrouter/free`. Persisted tool events confirm classification, stock checks, two reservations totaling three food boxes, volunteer matching, and two tasks. Food stock moved from 18 available / 6 reserved to 15 available / 9 reserved. Completed requests were not processed again during subsequent retries, and their two allocations stayed unique.
 
-On September 14, the hosted database still showed one `AUTO_APPROVED`, one `SCHEDULED`, and three `NEW` requests with food stock at 15 available / 9 reserved. OpenRouter's **Today** activity showed zero requests after the daily reset. The remaining production agent flow, human-review decision, and final second-run idempotency check remain pending rotation of the previously exposed OpenRouter key in both local and backend deployment settings. No paid credits are required or configured.
+On September 14, three bounded production calls processed the remaining requests using `nex-agi/nex-n2.5-pro:free`. `REQ-003` was auto-approved with one baby-care kit reserved and a volunteer task. `REQ-004` reached `HUMAN_REVIEW`: ten food boxes would have left five, below the protected threshold of eight. A human used the live UI to reduce the allocation to four; the decision, reservation, volunteer match, and task persisted, leaving it `SCHEDULED`. `REQ-005` became `NEEDS_INFORMATION` for its missing location, with no allocation or task.
+
+Final states are two `AUTO_APPROVED`, two `SCHEDULED`, and one `NEEDS_INFORMATION`. There are four unique allocations, four unique tasks, and one human decision. Food stock is 11 available / 13 reserved; baby-care kits are 6 / 4; medicine vouchers are 4 / 4. A final agent run processed zero requests and left all these values unchanged. No paid credits were used.
 
 ## Hackathon disclosure
 
