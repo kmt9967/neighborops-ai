@@ -12,7 +12,7 @@
 - [x] Prepare [architecture diagram PNG](architecture.png) for required Devpost upload
 - [ ] Confirm final production agent outcomes, human reduction, and second-run idempotency
 - [ ] Rotate the OpenRouter key and update the root `.env` and backend Vercel secret
-- [ ] Record and upload a demo video (maximum five minutes), then add its public video link
+- [x] Upload the 3:58 demo video as Unlisted, verify playback, and save its embeddable [YouTube link](https://youtu.be/rRHNVxvuPsQ) in the Devpost draft
 - [ ] Provide the submitter's AWS Builder ID, country of residence, and submitter type in Devpost
 - [x] Upload the architecture PNG and select the **Good Neighbor Agents** track in the dedicated Devpost draft
 - [ ] Complete remaining Devpost draft fields

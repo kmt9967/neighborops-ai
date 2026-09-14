@@ -20,7 +20,7 @@ NeighborOps is an operations dashboard for a fictional Karachi Community Pantry.
 
 For the large community-event request, reserving ten food boxes would cross a protected stock threshold. The agent asks for human review. The operator can reduce the allocation to four, after which reservation and volunteer coordination continue. A second agent run does not duplicate completed allocations.
 
-The hosted verification so far completed two routine food requests through real Strands/OpenRouter tool calls, reserving three food boxes and creating two delivery tasks. The remaining three hosted requests, including the human-review demonstration, are pending a fresh free-model quota window. The policy and human-decision paths pass local tests; do not describe their hosted outcomes as complete until the live run confirms them.
+The hosted verification so far completed two routine food requests through real Strands/OpenRouter tool calls, reserving three food boxes and creating two delivery tasks. The remaining three hosted requests, including the human-review demonstration, are pending final live verification after the exposed model credential is rotated. The policy and human-decision paths pass local tests; do not describe their hosted outcomes as complete until the live run confirms them.
 
 ### How we built it
 
@@ -46,9 +46,9 @@ The MVP uses fictional data. Before real organizations use it, we would add oper
 - **Live demo:** https://neighborops-ai.vercel.app/
 - **Architecture diagram file:** [`architecture.png`](architecture.png), generated from [`architecture.dot`](architecture.dot); Mermaid source is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 - **Testing instructions:** Open the dashboard and inspect the five fictional requests, three resource categories, and volunteer capacity. Click Run Agent; the free provider may take several minutes or need a safe retry. Inspect Agent Activity and the resulting request states. For `REQ-004`, choose Reduce Allocation with quantity 4. Click Run Agent again; no completed request should be processed twice. Do not enter real beneficiary data.
-- **Video demo link:** required, pending recording and hosting. Maximum five minutes. Use [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
+- **Video demo link:** [3:58 YouTube demo](https://youtu.be/rRHNVxvuPsQ), uploaded as Unlisted and confirmed playable; the Devpost draft embeds it.
 - **AWS Builder ID:** required, must be supplied by the account owner.
 - **Submitter type and country of residence:** required, must be confirmed by the account owner.
 - **Image gallery:** six live production screenshots are uploaded and saved in this order: dashboard, requests, agent activity, auto-handled request, resources, volunteers. The source captures and captions are documented in [`submission-screenshots/README.md`](submission-screenshots/README.md). Capture human-review and needs-information screenshots only after genuine hosted agent runs produce those states.
 
-The saved draft has its title, tagline, story, track, repository link, live demo link, testing instructions, architecture PNG, and six-image gallery. The video field remains empty until the owner supplies the final recording. Submitter type, country of residence, and AWS Builder ID also remain blank for the owner. The form has an optional organization name, optional bonus blog URL, and a final submission step. Do not click the final Submit action without the owner's explicit instruction.
+The saved draft has its title, tagline, story, track, repository link, live demo link, testing instructions, architecture PNG, six-image gallery, and playable YouTube embed. Its Built With tags now list Strands, agents, FastAPI, SQLAlchemy, OpenRouter, Next.js, Supabase, Vercel, Python, and TypeScript. Submitter type, country of residence, and AWS Builder ID remain blank for the owner. The form has an optional organization name, optional bonus blog URL, and a final submission step. Do not click the final Submit action without the owner's explicit instruction.

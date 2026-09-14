@@ -3,7 +3,7 @@
 **Autonomous Resource Coordination for Community Organizations**
 Agents for Humans · Good Neighbor Agents track
 
-**Live demo:** [neighborops-ai.vercel.app](https://neighborops-ai.vercel.app/) · **API:** [neighborops-backend.vercel.app/api/health](https://neighborops-backend.vercel.app/api/health) · **Source:** [GitHub](https://github.com/kmt9967/neighborops-ai)
+**Live demo:** [neighborops-ai.vercel.app](https://neighborops-ai.vercel.app/) · **Video:** [3:58 hackathon demo](https://youtu.be/rRHNVxvuPsQ) · **API:** [neighborops-backend.vercel.app/api/health](https://neighborops-backend.vercel.app/api/health) · **Source:** [GitHub](https://github.com/kmt9967/neighborops-ai)
 
 > Automate routine coordination. Escalate judgment.
 
@@ -98,7 +98,9 @@ The current MVP uses explicit Run Agent initiation, synchronous processing, one 
 
 ### Hosted verification snapshot (September 13, 2026)
 
-The deployed FastAPI health and dashboard endpoints returned HTTP 200; the Vercel frontend displayed the seeded Postgres data, and CORS allowed its exact origin. Real Strands/OpenRouter runs completed `REQ-001` and `REQ-002` using `openrouter/free`. Persisted tool events confirm classification, stock checks, two reservations totaling three food boxes, volunteer matching, and two tasks. Food stock moved from 18 available / 6 reserved to 15 available / 9 reserved. The other three requests remained `NEW` after the provider's free daily quota was exhausted, so the hosted human-review flow and final second-run idempotency check remain pending. Completed requests were not processed again during subsequent retries, and their two allocations stayed unique. The free quota resets at the provider's next daily window; no paid credits are required or configured.
+The deployed FastAPI health and dashboard endpoints returned HTTP 200; the Vercel frontend displayed the seeded Postgres data, and CORS allowed its exact origin. Real Strands/OpenRouter runs completed `REQ-001` and `REQ-002` using `openrouter/free`. Persisted tool events confirm classification, stock checks, two reservations totaling three food boxes, volunteer matching, and two tasks. Food stock moved from 18 available / 6 reserved to 15 available / 9 reserved. Completed requests were not processed again during subsequent retries, and their two allocations stayed unique.
+
+On September 14, the hosted database still showed one `AUTO_APPROVED`, one `SCHEDULED`, and three `NEW` requests with food stock at 15 available / 9 reserved. OpenRouter's **Today** activity showed zero requests after the daily reset. The remaining production agent flow, human-review decision, and final second-run idempotency check remain pending rotation of the previously exposed OpenRouter key in both local and backend deployment settings. No paid credits are required or configured.
 
 ## Hackathon disclosure
 
