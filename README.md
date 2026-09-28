@@ -5,6 +5,8 @@ Agents for Humans · Good Neighbor Agents track
 
 **Live demo:** [neighborops-ai.vercel.app](https://neighborops-ai.vercel.app/) · **Video:** [3:58 hackathon demo](https://youtu.be/rRHNVxvuPsQ) · **API:** [neighborops-backend.vercel.app/api/health](https://neighborops-backend.vercel.app/api/health) · **Source:** [GitHub](https://github.com/kmt9967/neighborops-ai)
 
+**Hackathon submission (Devpost):** [devpost.com/software/neighborops-ai](https://devpost.com/software/neighborops-ai) · **Portfolio case study:** [talalkhawaja.com/projects/neighborops-ai](https://talalkhawaja.com/projects/neighborops-ai) · **Team:** Talal Khawaja, Umer Anis, Aqeela Urooj, Safa Kamran
+
 > Automate routine coordination. Escalate judgment.
 
 Community pantries receive more help requests than small teams can manually classify, check, schedule, and follow up. NeighborOps AI handles the repetitive operations while staff retain authority over scarce-resource and fairness decisions. This is an operations dashboard, not a chatbot. The demo organization and all people are fictional.
